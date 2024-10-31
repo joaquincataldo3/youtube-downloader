@@ -32,8 +32,7 @@ app.post('/download', async (req, res, attempt = 1) => {
 
         // Manejar errores en stderr
         videoProcess.stderr.on('data', (data) => {
-            console.log(`stderr on`);
-            console.log(data)
+            console.error(`Error: ${data.toString()}`); // Convierte el buffer a string
         });
 
         // Manejar el cierre del proceso
