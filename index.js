@@ -26,7 +26,7 @@ app.post('/download', async (req, res, attempt = 1) => {
             output: '-', // Redirige la salida estándar como stream
             sleepInterval: 5, 
             cookies: './cookies.txt',
-            proxy: '179.41.8.151:80'
+            proxy: 'http://179.41.8.151:80'
         });
 
         // Pipear el stream de video a la respuesta
