@@ -25,8 +25,7 @@ app.post('/download', async (req, res, attempt = 1) => {
         const videoProcess = ytdlp.exec(url, {
             output: '-', // Redirige la salida estándar como stream
             sleepInterval: 5, 
-            cookies: './cookies.txt',
-            proxy: 'http://190.103.177.131:80'
+            cookies: './cookies.txt'
         });
 
         // Pipear el stream de video a la respuesta
