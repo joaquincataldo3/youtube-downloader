@@ -9,7 +9,7 @@ const PORT = process.env.PORT || 3000;
 app.use(bodyParser.json());
 
 // Endpoint para descargar el video
-app.post('/download', async (req, res) => {
+app.post('/download', async (req, res, attempt = 1) => {
     const { url } = req.body;
 
     if (!url) {
@@ -24,7 +24,7 @@ app.post('/download', async (req, res) => {
         // Ejecutar yt-dlp y capturar la salida como stream
         const videoProcess = ytdlp.exec(url, {
             output: '-', // Redirige la salida estándar como stream
-            format: 'best'
+            sleepInterval: 5
         });
 
         // Pipear el stream de video a la respuesta
@@ -32,19 +32,28 @@ app.post('/download', async (req, res) => {
 
         // Manejar errores en stderr
         videoProcess.stderr.on('data', (data) => {
-            console.error(`Error: ${data}`);
+            console.log(`stderr on`);
+            console.log(data)
         });
 
         // Manejar el cierre del proceso
         videoProcess.on('close', (code) => {
             console.log(`yt-dlp exited with code ${code}`);
-            if (code !== 0) {
+             if (code !== 0 && !res.headersSent) {
                 return res.status(500).json({ message: 'Error downloading the video.' });
             }
         });
     } catch (error) {
         console.error('Error executing yt-dlp:', error);
-        return res.status(500).json({ message: 'Error executing yt-dlp.', error: error.message });
+        if (error.message.includes('HTTP Error 429') && attempt < 3) { // Limita los reintentos a 3
+            console.log(`Attempt ${attempt} failed. Retrying...`);
+            // Reintento después de 5 segundos
+            downloadVideo(url, res, attempt + 1);
+        } else {
+            if (!res.headersSent) {
+                return res.status(500).json({ message: 'Error executing yt-dlp.', error: error.message });
+            }
+        }
     }
 });
 
