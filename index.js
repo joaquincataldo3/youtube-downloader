@@ -24,7 +24,8 @@ app.post('/download', async (req, res, attempt = 1) => {
         // Ejecutar yt-dlp y capturar la salida como stream
         const videoProcess = ytdlp.exec(url, {
             output: '-', // Redirige la salida estándar como stream
-            sleepInterval: 5
+            sleepInterval: 5, 
+            cookies: './cookies.txt'
         });
 
         // Pipear el stream de video a la respuesta
