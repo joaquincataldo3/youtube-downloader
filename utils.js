@@ -4,7 +4,10 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 export const getYoutubeCookies = async () => {
-    const browser = await puppeteer.launch({ headless: true });
+    const browser = await puppeteer.launch({
+         headless: true ,
+         cacheDirectory: '/opt/render/.cache/puppeteer'
+    });
     const page = await browser.newPage();
     await page.goto('https://accounts.google.com/signin/v2/identifier');
     await page.type('input[type="email"]', process.env.YOUTUBE_EMAIL);
