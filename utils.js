@@ -16,10 +16,7 @@ export const getYoutubeCookies = async () => {
     await page.type('input[type="password"]', process.env.YOUTUBE_PASSWORD);
     await page.click('#passwordNext');
     await page.waitForNavigation({ waitUntil: 'networkidle0' });
-    // Step 2: Redirect to YouTube to get YouTube cookies
     await page.goto('https://www.youtube.com', { waitUntil: 'networkidle0' });
-    
-    // Step 3: Get cookies for YouTube
     const youtubeCookies = await page.cookies();
     await browser.close();
     return youtubeCookies;
