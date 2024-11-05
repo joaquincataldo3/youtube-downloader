@@ -21,9 +21,9 @@ app.post('/download', async (req, res, attempt = 1) => {
 
     try {
 
-        const cookies = await getYoutubeCookies();
+        //const cookies = await getYoutubeCookies();
 
-        writeNetscapeCookiesFile(cookies)
+        //writeNetscapeCookiesFile(cookies)
 
         // sleeping interval to avoid getting status 429
         const videoProcess = ytdlp.exec(url, {
