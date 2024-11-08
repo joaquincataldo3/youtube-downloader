@@ -14,8 +14,30 @@ export const getYoutubeCookies = async () => {
         console.log('typing email...')
         await page.type('input[type="email"]', process.env.YOUTUBE_EMAIL);
         console.log('next click...')
+        const screenshot = await page.screenshot(); // Capture screenshot as Buffer
+        // Upload to Cloudinary
+        cloudinary.uploader.upload_stream(
+          (error, result) => {
+            if (error) {
+              console.error('Error uploading to Cloudinary:', error);
+            } else {
+              console.log('Upload successful:', result);
+            }
+          }
+        ).end(screenshot);
         await page.click('#identifierNext');
         console.log('waiting for password...')
+        const screenshot2 = await page.screenshot(); // Capture screenshot as Buffer
+        // Upload to Cloudinary
+        cloudinary.uploader.upload_stream(
+          (error, result) => {
+            if (error) {
+              console.error('Error uploading to Cloudinary:', error);
+            } else {
+              console.log('Upload successful:', result);
+            }
+          }
+        ).end(screenshot);
         await page.waitForSelector('input[type="password"]', { visible: true, timeout: 30000 });
         console.log('typing password...')
         await page.type('input[type="password"]', process.env.YOUTUBE_PASSWORD);
