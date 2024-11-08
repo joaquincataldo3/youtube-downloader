@@ -7,6 +7,7 @@ export const getYoutubeCookies = async () => {
     try{
         const browser = await puppeteer.launch({
              headless: true ,
+             executablePath: '/opt/render/.cache/puppeteer/chrome/linux-130.0.6723.69/chrome-linux64/chrome',
              cacheDirectory: '/opt/render/.cache/puppeteer'
         });
         const page = await browser.newPage();
