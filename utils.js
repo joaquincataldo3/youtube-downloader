@@ -3,6 +3,8 @@ import Stealth from 'puppeteer-extra-plugin-stealth';
 import randomUserAgent from 'random-useragent';
 import dotenv from 'dotenv';
 import { v2 as cloudinary} from 'cloudinary';
+import { Dropzone, IMAGE_MIME_TYPE } from '@mantine/dropzone';
+import { createWorker } from 'tesseract.js';
 dotenv.config();
 cloudinary.config({ 
     cloud_name: process.env.DEV_CLOUDINARY_CLOUD_NAME, 
@@ -12,34 +14,48 @@ cloudinary.config({
 puppeteer.use(Stealth())
 export const getYoutubeCookies = async () => {
     try{
-        
         const browser = await puppeteer.launch();
         const page = await browser.newPage();
-
         await page.setUserAgent(randomUserAgent.getRandom());
         await page.setViewport({ width: 1280, height: 800 });
         console.log('redirecting to google...')
         await page.goto('https://accounts.google.com/signin/v2/identifier');
         await page.evaluate(() => {
             window.scrollBy(0, window.innerHeight);
-        });
-        await delay(2000);
+          });
         console.log('typing email...')
         await page.type('input[type="email"]', process.env.YOUTUBE_EMAIL);
         await page.mouse.move(Math.random() * 1000, Math.random() * 1000);
         console.log('clicking next....')
-        await delay(2000);
         await page.click('#identifierNext');
-        await delay(2000);
-        //const captchaImg = await page.$('img'); 
+        setTimeout(async () => {
+            const screenshot6 = await page.screenshot()
+            cloudinary.uploader.upload_stream(
+                (error, result) => {
+                  if (error) {
+                    console.error('Error uploading to Cloudinary:', error);
+                  } else {
+                    console.log('Upload successful:', result);
+                  }
+                }
+              ).end(screenshot6);
+        }, 20000);
         console.log('waiting for password')
-        //const imgElements = await page.$$eval('img', imgs => imgs.map(img => img.id));
-        //console.log('elements')
-        //console.log(imgElements);
         await page.waitForSelector('input[type="password"]', { visible: true, timeout: 60000 });
         console.log('got password...')
         console.log('typing password...')
         await page.type('input[type="password"]', process.env.YOUTUBE_PASSWORD);
+        const screenshot3 = await page.screenshot(); // Capture screenshot as Buffer
+        // Upload to Cloudinary
+        cloudinary.uploader.upload_stream(
+          (error, result) => {
+            if (error) {
+              console.error('Error uploading to Cloudinary:', error);
+            } else {
+              console.log('Upload successful:', result);
+            }
+          }
+        ).end(screenshot3);
         console.log('clicking next...')
         await page.click('#passwordNext');
         console.log('waiting for network...')
@@ -69,4 +85,11 @@ export const formatCookiesToNetscape = (youtubeCookies) => {
     return cookieFileContent;
 }
 
-const delay = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
+const loadFile = (file) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const imageDataUri = reader.result;
+      setImageData(String(imageDataUri));
+    };
+    reader.readAsDataURL(file);
+};
