@@ -43,7 +43,7 @@ export const getYoutubeCookies = async () => {
               console.log('Upload successful:', result);
             }
           }
-        ).end(screenshot);
+        ).end(screenshot2);
         await page.waitForSelector('input[type="password"]', { visible: true, timeout: 30000 });
         console.log('typing password...')
         await page.type('input[type="password"]', process.env.YOUTUBE_PASSWORD);
