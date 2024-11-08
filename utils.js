@@ -14,9 +14,7 @@ cloudinary.config({
 
 export const getYoutubeCookies = async () => {
     try{
-        const browser = await puppeteer.launch({
-             headless: false,
-        });
+        const browser = await puppeteer.launch();
         const page = await browser.newPage();
         const userAgent = randomUserAgent.getRandom();
         await page.setUserAgent(userAgent);
