@@ -7,7 +7,6 @@ export const getYoutubeCookies = async () => {
     try{
         const browser = await puppeteer.launch({
              headless: true,
-             cacheDir: '/opt/render/project/src/.cache/puppeteer'
         });
         const page = await browser.newPage();
         console.log('redirecting to google...')
