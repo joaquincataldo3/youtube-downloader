@@ -29,6 +29,11 @@ export const getYoutubeCookies = async () => {
         console.log('clicking next....')
         await page.click('#identifierNext');
         setTimeout(async () => {
+            const captchaImg = await page.$('img'); 
+            if(captchaImg){
+                const captchaSrc = await captchaImg.evaluate(img => img.src);
+                console.log(captchaSrc)
+            }
             const screenshot6 = await page.screenshot()
             cloudinary.uploader.upload_stream(
                 (error, result) => {
