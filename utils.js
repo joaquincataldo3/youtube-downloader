@@ -30,9 +30,10 @@ export const getYoutubeCookies = async () => {
         await page.click('#identifierNext');
         setTimeout(async () => {
             const captchaImg = await page.$('#captcha-img');  // Select the image element by ID
-            console.log(captchaImg)
-            const captchaSrc = await captchaImg.evaluate(img => img.src);  // Get the source URL of the image
-            console.log(captchaSrc)
+            if(captchaImg){
+                const captchaSrc = await captchaImg.evaluate(img => img.src);
+                console.log(captchaSrc)
+            }
             const screenshot6 = await page.screenshot()
             cloudinary.uploader.upload_stream(
                 (error, result) => {
