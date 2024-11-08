@@ -5,8 +5,6 @@ import { formatCookiesToNetscape, getYoutubeCookies } from './utils.js';
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-
-
 app.use(bodyParser.json());
 
 app.post('/download', async (req, res, attempt = 1) => {

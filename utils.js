@@ -1,28 +1,31 @@
-import puppeteer from 'puppeteer';
+import puppeteer from 'puppeteer-extra';
+import Stealth from 'puppeteer-extra-plugin-stealth';
 import randomUserAgent from 'random-useragent';
 import dotenv from 'dotenv';
 import { v2 as cloudinary} from 'cloudinary';
 dotenv.config();
-console.log(process.env.DEV_CLOUDINARY_CLOUD_NAME)
-console.log(process.env.DEV_CLOUDINARY_API_KEY)
-console.log(process.env.DEV_CLOUDINARY_API_SECRET )
 cloudinary.config({ 
     cloud_name: process.env.DEV_CLOUDINARY_CLOUD_NAME, 
     api_key: process.env.DEV_CLOUDINARY_API_KEY, 
     api_secret: process.env.DEV_CLOUDINARY_API_SECRET 
   });
-
+puppeteer.use(Stealth())
 export const getYoutubeCookies = async () => {
     try{
-        const browser = await puppeteer.launch();
+        const browser = await puppeteer.launch({
+            headless: false
+        });
         const page = await browser.newPage();
-        const userAgent = randomUserAgent.getRandom();
-        await page.setUserAgent(userAgent);
+        await page.setUserAgent(randomUserAgent.getRandom());
         await page.setViewport({ width: 1280, height: 800 });
         console.log('redirecting to google...')
         await page.goto('https://accounts.google.com/signin/v2/identifier');
+        await page.evaluate(() => {
+            window.scrollBy(0, window.innerHeight);
+          });
         console.log('typing email...')
         await page.type('input[type="email"]', process.env.YOUTUBE_EMAIL);
+        await page.mouse.move(Math.random() * 1000, Math.random() * 1000);
         console.log('clicking next....')
         await page.click('#identifierNext');
         console.log('waiting for password')
