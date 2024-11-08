@@ -1,6 +1,10 @@
 {
   "type": "module",
   "dependencies": {
+    "@mantine/core": "^7.13.5",
+    "@mantine/dropzone": "^7.13.5",
+    "@mantine/hooks": "^7.13.5",
+    "@mantine/next": "^6.0.22",
     "axios": "^1.7.7",
     "body-parser": "^1.20.3",
     "cloudinary": "^2.5.1",
@@ -11,7 +15,8 @@
     "puppeteer-extra": "^3.3.6",
     "puppeteer-extra-plugin-stealth": "^2.11.2",
     "random-useragent": "^0.5.0",
-    "request-promise": "^4.2.6"
+    "request-promise": "^4.2.6",
+    "tesseract.js": "^5.1.1"
   },
   "name": "download-video",
   "version": "1.0.0",

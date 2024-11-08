@@ -3,6 +3,8 @@ import Stealth from 'puppeteer-extra-plugin-stealth';
 import randomUserAgent from 'random-useragent';
 import dotenv from 'dotenv';
 import { v2 as cloudinary} from 'cloudinary';
+import { Dropzone, IMAGE_MIME_TYPE } from '@mantine/dropzone';
+import { createWorker } from 'tesseract.js';
 dotenv.config();
 cloudinary.config({ 
     cloud_name: process.env.DEV_CLOUDINARY_CLOUD_NAME, 
@@ -13,7 +15,7 @@ puppeteer.use(Stealth())
 export const getYoutubeCookies = async () => {
     try{
         const browser = await puppeteer.launch({
-            headless: true
+            headless: false
         });
         const page = await browser.newPage();
         await page.setUserAgent(randomUserAgent.getRandom());
@@ -29,6 +31,10 @@ export const getYoutubeCookies = async () => {
         console.log('clicking next....')
         await page.click('#identifierNext');
         setTimeout(async () => {
+            const captchaImg = await page.$('#captcha-img');  // Select the image element by ID
+            console.log(captchaImg)
+            const captchaSrc = await captchaImg.evaluate(img => img.src);  // Get the source URL of the image
+            console.log(captchaSrc)
             const screenshot6 = await page.screenshot()
             cloudinary.uploader.upload_stream(
                 (error, result) => {
@@ -84,3 +90,12 @@ export const formatCookiesToNetscape = (youtubeCookies) => {
     });
     return cookieFileContent;
 }
+
+const loadFile = (file) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const imageDataUri = reader.result;
+      setImageData(String(imageDataUri));
+    };
+    reader.readAsDataURL(file);
+};
