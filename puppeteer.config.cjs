@@ -3,5 +3,5 @@
  */
 module.exports = {
     // Set the cache directory for puppeteer-extra
-    cacheDirectory: join('/opt/render/project/src/.cache/puppeteer'),
+    cacheDirectory: '/opt/render/project/src/.cache/puppeteer',
 };
