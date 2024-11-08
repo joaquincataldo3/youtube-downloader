@@ -1,9 +1,7 @@
-const { join } = require('path');
-
 /**
- * @type {import("puppeteer").Configuration}
+ * @type {import("puppeteer-extra").Configuration}
  */
 module.exports = {
-    // Changes the cache location for Puppeteer.
-    cacheDirectory: '/opt/render/project/src/.cache/puppeteer',
+    // Set the cache directory for puppeteer-extra
+    cacheDirectory: join('/opt/render/project/src/.cache/puppeteer'),
 };
