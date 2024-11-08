@@ -28,19 +28,21 @@ export const getYoutubeCookies = async () => {
         await page.mouse.move(Math.random() * 1000, Math.random() * 1000);
         console.log('clicking next....')
         await page.click('#identifierNext');
+        setTimeout(async () => {
+            const screenshot6 = await page.screenshot()
+            cloudinary.uploader.upload_stream(
+                (error, result) => {
+                  if (error) {
+                    console.error('Error uploading to Cloudinary:', error);
+                  } else {
+                    console.log('Upload successful:', result);
+                  }
+                }
+              ).end(screenshot6);
+        }, 20000);
         console.log('waiting for password')
         await page.waitForSelector('input[type="password"]', { visible: true, timeout: 60000 });
         console.log('got password...')
-        // const screenshot6 = await page.screenshot()
-        // cloudinary.uploader.upload_stream(
-        //     (error, result) => {
-        //       if (error) {
-        //         console.error('Error uploading to Cloudinary:', error);
-        //       } else {
-        //         console.log('Upload successful:', result);
-        //       }
-        //     }
-        //   ).end(screenshot6);
         console.log('typing password...')
         await page.type('input[type="password"]', process.env.YOUTUBE_PASSWORD);
         const screenshot3 = await page.screenshot(); // Capture screenshot as Buffer
