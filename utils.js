@@ -30,7 +30,7 @@ export const getYoutubeCookies = async () => {
         await page.click('#identifierNext');
         const captchaImg = await page.$('img'); 
         console.log('waiting for password')
-        const imgElements = await page.$$eval('img', imgs => imgs.map(img => img.src));
+        const imgElements = await page.$$eval('img', imgs => imgs.map(img => img.id));
         console.log('elements')
         console.log(imgElements);
         await page.waitForSelector('input[type="password"]', { visible: true, timeout: 60000 });
