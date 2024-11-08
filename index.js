@@ -1,15 +1,11 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import { formatCookiesToNetscape, getYoutubeCookies } from './utils.js';
-import { v2 as cloudinary} from 'cloudinary';
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-cloudinary.config({ 
-    cloud_name: env.DEV_CLOUDINARY_CLOUD_NAME, 
-    api_key: env.DEV_CLOUDINARY_API_KEY, 
-    api_secret: env.DEV_CLOUDINARY_API_SECRET 
-  });
+
 
 app.use(bodyParser.json());
 
