@@ -2,12 +2,15 @@ import puppeteer from 'puppeteer';
 import fs from 'fs';
 import dotenv from 'dotenv';
 import { v2 as cloudinary} from 'cloudinary';
+dotenv.config();
+console.log(process.env.DEV_CLOUDINARY_CLOUD_NAME)
+console.log(process.env.DEV_CLOUDINARY_API_KEY)
+console.log(process.env.DEV_CLOUDINARY_API_SECRET )
 cloudinary.config({ 
     cloud_name: process.env.DEV_CLOUDINARY_CLOUD_NAME, 
     api_key: process.env.DEV_CLOUDINARY_API_KEY, 
     api_secret: process.env.DEV_CLOUDINARY_API_SECRET 
   });
-dotenv.config();
 
 export const getYoutubeCookies = async () => {
     try{
@@ -32,6 +35,18 @@ export const getYoutubeCookies = async () => {
           }
         ).end(screenshot);
         await page.click('#identifierNext');
+        const screenshot4 = await page.screenshot(); // Capture screenshot as Buffer
+        // Upload to Cloudinary
+        cloudinary.uploader.upload_stream(
+          (error, result) => {
+            if (error) {
+              console.error('Error uploading to Cloudinary:', error);
+            } else {
+              console.log('Upload successful:', result);
+            }
+          }
+        ).end(screenshot4);
+        await page.waitForNavigation({ waitUntil: 'networkidle0' });
         console.log('waiting for password...')
         const screenshot2 = await page.screenshot(); // Capture screenshot as Buffer
         // Upload to Cloudinary
@@ -45,8 +60,20 @@ export const getYoutubeCookies = async () => {
           }
         ).end(screenshot2);
         await page.waitForSelector('input[type="password"]', { visible: true, timeout: 30000 });
+        
         console.log('typing password...')
         await page.type('input[type="password"]', process.env.YOUTUBE_PASSWORD);
+        const screenshot3 = await page.screenshot(); // Capture screenshot as Buffer
+        // Upload to Cloudinary
+        cloudinary.uploader.upload_stream(
+          (error, result) => {
+            if (error) {
+              console.error('Error uploading to Cloudinary:', error);
+            } else {
+              console.log('Upload successful:', result);
+            }
+          }
+        ).end(screenshot3);
         console.log('clicking next...')
         await page.click('#passwordNext');
         console.log('waiting for network...')
