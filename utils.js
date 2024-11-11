@@ -12,9 +12,7 @@ cloudinary.config({
 puppeteer.use(Stealth())
 export const getYoutubeCookies = async () => {
     try{
-        const browser = await puppeteer.launch({
-            headless: false
-        });
+        const browser = await puppeteer.launch();
         const page = await browser.newPage();
         await page.setUserAgent(randomUserAgent.getRandom());
         await page.setViewport({ width: 1280, height: 800 });
